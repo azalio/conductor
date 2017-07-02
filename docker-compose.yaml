@@ -1,0 +1,36 @@
+version: '3'
+services:
+  conductor:
+    dns_search: .
+    #    links:
+    #      - mongo
+    build: 
+      context: ./
+      dockerfile: docker/app/Dockerfile
+    ports:
+      - "127.0.0.1:5000:5000"
+    # ports:
+    #   - target: 5000
+    #     published: 5000
+    #     protocol: tcp
+    #     mode: host
+#    networks:
+#      - conductor
+    depends_on:
+      - mongo
+    network_mode: "host"
+    command: ./start.py
+  mongo:
+    dns_search: .
+    image: mongo:3.4.5
+    volumes:
+      - mongo-conductor-db:/data/db
+#    networks:
+#      - conductor
+    expose:
+       - "27017"
+    network_mode: "host"
+volumes:
+  mongo-conductor-db: {}
+#networks:
+#  conductor:
